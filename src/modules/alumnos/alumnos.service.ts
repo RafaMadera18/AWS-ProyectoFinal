@@ -22,7 +22,7 @@ export class AlumnosService {
   }
 
   findOne(id: number) {
-    const alumno = this.alumnos.find((alumno) => alumno.id === id);
+    const alumno = this.alumnos.find((a) => a.id === id);
     if (!alumno) {
       throw new NotFoundException('Alumno not found');
     }

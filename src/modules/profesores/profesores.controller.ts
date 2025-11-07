@@ -17,7 +17,11 @@ export class ProfesoresController {
 
   @Post()
   create(@Body() createProfesorDto: CreateProfesorDto) {
-    return this.profesoresService.create(createProfesorDto);
+    const newProfesor = this.profesoresService.create(createProfesorDto);
+    return {
+      message: 'Profesor creado exitosamente',
+      profesor: newProfesor,
+    };
   }
 
   @Get()
@@ -35,11 +39,21 @@ export class ProfesoresController {
     @Param('id') id: string,
     @Body() updateProfesorDto: UpdateProfesorDto,
   ) {
-    return this.profesoresService.update(+id, updateProfesorDto);
+    const updatedProfesor = this.profesoresService.update(
+      +id,
+      updateProfesorDto,
+    );
+    return {
+      message: 'Profesor actualizado exitosamente',
+      profesor: updatedProfesor,
+    };
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.profesoresService.remove(+id);
+    this.profesoresService.remove(+id);
+    return {
+      message: 'Profesor eliminado exitosamente',
+    };
   }
 }
