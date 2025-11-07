@@ -17,7 +17,11 @@ export class AlumnosController {
 
   @Post()
   create(@Body() createAlumnoDto: CreateAlumnoDto) {
-    return this.alumnosService.create(createAlumnoDto);
+    const newAlumno = this.alumnosService.create(createAlumnoDto);
+    return {
+      message: 'Alumno creado exitosamente',
+      alumno: newAlumno,
+    };
   }
 
   @Get()
@@ -32,11 +36,18 @@ export class AlumnosController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAlumnoDto: UpdateAlumnoDto) {
-    return this.alumnosService.update(+id, updateAlumnoDto);
+    const updatedAlumno = this.alumnosService.update(+id, updateAlumnoDto);
+    return {
+      message: 'Alumno actualizado exitosamente',
+      alumno: updatedAlumno,
+    };
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.alumnosService.remove(+id);
+    this.alumnosService.remove(+id);
+    return {
+      message: 'Alumno eliminado exitosamente',
+    };
   }
 }

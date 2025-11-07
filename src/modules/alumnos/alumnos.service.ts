@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAlumnoDto } from './dto/create-alumno.dto';
 import { UpdateAlumnoDto } from './dto/update-alumno.dto';
 import { Alumno } from './entities/alumno.entity';
@@ -14,6 +14,7 @@ export class AlumnosService {
       ...createAlumnoDto,
     };
     this.alumnos.push(newAlumno);
+    return newAlumno;
   }
 
   findAll() {
@@ -21,12 +22,16 @@ export class AlumnosService {
   }
 
   findOne(id: number) {
-    return this.alumnos.find((alumno) => alumno.id === id);
+    const alumno = this.alumnos.find((alumno) => alumno.id === id);
+    if (!alumno) {
+      throw new NotFoundException('Alumno not found');
+    }
+    return alumno;
   }
 
   update(id: number, updateAlumnoDto: UpdateAlumnoDto): Alumno {
     const alumnoIndex = this.alumnos.findIndex((a) => a.id === id);
-    if (alumnoIndex === -1) throw new Error('Alumno not found');
+    if (alumnoIndex === -1) throw new NotFoundException('Alumno not found');
     this.alumnos[alumnoIndex] = {
       ...this.alumnos[alumnoIndex],
       ...updateAlumnoDto,
@@ -36,7 +41,7 @@ export class AlumnosService {
 
   remove(id: number) {
     const alumnoIndex = this.alumnos.findIndex((a) => a.id === id);
-    if (alumnoIndex === -1) throw new Error('Alumno not found');
+    if (alumnoIndex === -1) throw new NotFoundException('Alumno not found');
     this.alumnos.splice(alumnoIndex, 1);
   }
 }
