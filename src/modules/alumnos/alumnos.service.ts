@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAlumnoDto } from './dto/create-alumno.dto';
 import { UpdateAlumnoDto } from './dto/update-alumno.dto';
 import { Alumno } from './entities/alumno.entity';
@@ -6,13 +10,17 @@ import { Alumno } from './entities/alumno.entity';
 @Injectable()
 export class AlumnosService {
   private readonly alumnos: Alumno[] = [];
-  private idCounter = 1;
 
-  create(createAlumnoDto: CreateAlumnoDto) {
+  create(createAlumnoDto: CreateAlumnoDto): Alumno {
+    const exists = this.alumnos.find((a) => a.id === createAlumnoDto.id);
+    if (exists) {
+      throw new BadRequestException('Ya existe un alumno con ese ID');
+    }
+
     const newAlumno: Alumno = {
-      id: this.idCounter++,
       ...createAlumnoDto,
     };
+
     this.alumnos.push(newAlumno);
     return newAlumno;
   }
@@ -31,11 +39,15 @@ export class AlumnosService {
 
   update(id: number, updateAlumnoDto: UpdateAlumnoDto): Alumno {
     const alumnoIndex = this.alumnos.findIndex((a) => a.id === id);
-    if (alumnoIndex === -1) throw new NotFoundException('Alumno not found');
+    if (alumnoIndex === -1) {
+      throw new NotFoundException('Alumno not found');
+    }
+
     this.alumnos[alumnoIndex] = {
-      ...this.alumnos[alumnoIndex],
       ...updateAlumnoDto,
+      id: id,
     };
+
     return this.alumnos[alumnoIndex];
   }
 
