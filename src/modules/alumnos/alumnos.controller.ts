@@ -9,6 +9,8 @@ import {
   UploadedFile,
   UseInterceptors,
   BadRequestException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AlumnosService } from './alumnos.service';
@@ -20,9 +22,11 @@ export class AlumnosController {
   constructor(private readonly alumnosService: AlumnosService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createAlumnoDto: CreateAlumnoDto) {
     const newAlumno = await this.alumnosService.create(createAlumnoDto);
     return {
+      id: newAlumno.id,
       message: 'Alumno creado exitosamente',
       alumno: newAlumno,
     };
@@ -62,6 +66,7 @@ export class AlumnosController {
   }
 
   @Post(':id/fotoPerfil')
+  @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('foto'))
   async uploadProfilePhoto(
     @Param('id') id: string,
@@ -79,6 +84,7 @@ export class AlumnosController {
   }
 
   @Post(':id/email')
+  @HttpCode(HttpStatus.OK)
   async sendEmail(@Param('id') id: string) {
     await this.alumnosService.sendEmailNotification(+id);
     return {
@@ -87,11 +93,13 @@ export class AlumnosController {
   }
 
   @Post(':id/session/login')
+  @HttpCode(HttpStatus.OK)
   async login(@Param('id') id: string, @Body() body: { password: string }) {
     return await this.alumnosService.login(+id, body.password);
   }
 
   @Post(':id/session/verify')
+  @HttpCode(HttpStatus.OK)
   async verifySession(
     @Param('id') id: string,
     @Body() body: { sessionString: string },
@@ -112,6 +120,7 @@ export class AlumnosController {
   }
 
   @Post(':id/session/logout')
+  @HttpCode(HttpStatus.OK)
   async logout(
     @Param('id') id: string,
     @Body() body: { sessionString: string },

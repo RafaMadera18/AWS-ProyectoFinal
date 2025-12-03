@@ -12,27 +12,47 @@ import {
 export class UpdateAlumnoDto {
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ type: String, description: 'Nombres del alumno' })
-  nombres: string;
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: 'Nombres del alumno',
+    required: false,
+  })
+  nombres?: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ type: String, description: 'Apellidos del alumno' })
-  apellidos: string;
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: 'Apellidos del alumno',
+    required: false,
+  })
+  apellidos?: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   @Matches(/^A\d+$/, {
     message: 'La matrícula debe empezar con A seguido de números',
   })
-  @ApiProperty({ type: String, description: 'Número de matrícula del alumno' })
-  matricula: string;
+  @ApiProperty({
+    type: String,
+    description: 'Número de matrícula del alumno',
+    required: false,
+  })
+  matricula?: string;
 
   @IsNumber()
   @Min(0)
   @Max(100)
-  @ApiProperty({ type: Number, description: 'Promedio del alumno' })
-  promedio: number;
+  @IsOptional() // Agregar este decorador
+  @ApiProperty({
+    type: Number,
+    description: 'Promedio del alumno',
+    required: false,
+  })
+  promedio?: number;
 
   @IsString()
   @IsOptional()

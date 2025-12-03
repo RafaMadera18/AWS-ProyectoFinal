@@ -116,12 +116,12 @@ export class AlumnosService {
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
-      ACL: 'public-read',
     });
 
     await this.s3Client.send(command);
 
     const photoUrl = `https://${this.bucketName}.s3.amazonaws.com/${key}`;
+
     alumno.fotoPerfilUrl = photoUrl;
     await this.alumnoRepository.save(alumno);
 

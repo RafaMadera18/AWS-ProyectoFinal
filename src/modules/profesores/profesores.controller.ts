@@ -6,6 +6,8 @@ import {
   Param,
   Delete,
   Put,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProfesoresService } from './profesores.service';
 import { CreateProfesorDto } from './dto/create-profesor.dto';
@@ -16,9 +18,11 @@ export class ProfesoresController {
   constructor(private readonly profesoresService: ProfesoresService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createProfesorDto: CreateProfesorDto) {
     const newProfesor = await this.profesoresService.create(createProfesorDto);
     return {
+      id: newProfesor.id,
       message: 'Profesor creado exitosamente',
       profesor: newProfesor,
     };
