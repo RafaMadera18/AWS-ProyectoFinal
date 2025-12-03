@@ -10,11 +10,6 @@ import {
 export class CreateProfesorDto {
   @IsNumber()
   @IsPositive()
-  @ApiProperty({ type: Number, description: 'ID del Profesor' })
-  id: number;
-
-  @IsNumber()
-  @IsPositive()
   @ApiProperty({
     type: Number,
     description: 'Número de empleado del profesor',

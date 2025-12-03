@@ -132,11 +132,11 @@ export class AlumnosService {
     const alumno = await this.findOne(id);
 
     const message = `
-Notificación de Alumno
-----------------------
-Nombre: ${alumno.nombres} ${alumno.apellidos}
-Matrícula: ${alumno.matricula}
-Promedio: ${alumno.promedio}
+      Notificación de Alumno
+      ----------------------
+      Nombre: ${alumno.nombres} ${alumno.apellidos}
+      Matrícula: ${alumno.matricula}
+      Promedio: ${alumno.promedio}
     `;
 
     const command = new PublishCommand({

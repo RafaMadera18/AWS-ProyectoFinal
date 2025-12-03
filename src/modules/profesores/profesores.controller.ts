@@ -16,8 +16,8 @@ export class ProfesoresController {
   constructor(private readonly profesoresService: ProfesoresService) {}
 
   @Post()
-  create(@Body() createProfesorDto: CreateProfesorDto) {
-    const newProfesor = this.profesoresService.create(createProfesorDto);
+  async create(@Body() createProfesorDto: CreateProfesorDto) {
+    const newProfesor = await this.profesoresService.create(createProfesorDto);
     return {
       message: 'Profesor creado exitosamente',
       profesor: newProfesor,
@@ -25,21 +25,21 @@ export class ProfesoresController {
   }
 
   @Get()
-  findAll() {
-    return this.profesoresService.findAll();
+  async findAll() {
+    return await this.profesoresService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profesoresService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.profesoresService.findOne(+id);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateProfesorDto: UpdateProfesorDto,
   ) {
-    const updatedProfesor = this.profesoresService.update(
+    const updatedProfesor = await this.profesoresService.update(
       +id,
       updateProfesorDto,
     );
@@ -50,8 +50,8 @@ export class ProfesoresController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    this.profesoresService.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.profesoresService.remove(+id);
     return {
       message: 'Profesor eliminado exitosamente',
     };

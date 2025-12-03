@@ -3,52 +3,57 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateProfesorDto } from './dto/create-profesor.dto';
 import { UpdateProfesorDto } from './dto/update-profesor.dto';
 import { Profesor } from './entities/profesor.entity';
 
 @Injectable()
 export class ProfesoresService {
-  private readonly profesores: Profesor[] = [];
+  constructor(
+    @InjectRepository(Profesor)
+    private readonly profesorRepository: Repository<Profesor>,
+  ) {}
 
-  create(createProfesorDto: CreateProfesorDto) {
-    const exists = this.profesores.find((p) => p.id === createProfesorDto.id);
+  async create(createProfesorDto: CreateProfesorDto): Promise<Profesor> {
+    const exists = await this.profesorRepository.findOne({
+      where: { numeroEmpleado: createProfesorDto.numeroEmpleado },
+    });
+
     if (exists) {
-      throw new BadRequestException('Ya existe un profesor con ese ID');
+      throw new BadRequestException(
+        'Ya existe un profesor con ese número de empleado',
+      );
     }
-    const newProfesor: Profesor = {
-      ...createProfesorDto,
-    };
-    this.profesores.push(newProfesor);
-    return newProfesor;
+
+    const newProfesor = this.profesorRepository.create(createProfesorDto);
+    return await this.profesorRepository.save(newProfesor);
   }
 
-  findAll() {
-    return [...this.profesores];
+  async findAll(): Promise<Profesor[]> {
+    return await this.profesorRepository.find();
   }
 
-  findOne(id: number) {
-    const profesor = this.profesores.find((p) => p.id === id);
+  async findOne(id: number): Promise<Profesor> {
+    const profesor = await this.profesorRepository.findOne({ where: { id } });
     if (!profesor) {
       throw new NotFoundException('Profesor not found');
     }
     return profesor;
   }
 
-  update(id: number, updateProfesorDto: UpdateProfesorDto): Profesor {
-    const profesorIndex = this.profesores.findIndex((p) => p.id === id);
-    if (profesorIndex === -1) throw new NotFoundException('Profesor not found');
-
-    this.profesores[profesorIndex] = {
-      ...updateProfesorDto,
-      id: id,
-    };
-    return this.profesores[profesorIndex];
+  async update(
+    id: number,
+    updateProfesorDto: UpdateProfesorDto,
+  ): Promise<Profesor> {
+    const profesor = await this.findOne(id);
+    Object.assign(profesor, updateProfesorDto);
+    return await this.profesorRepository.save(profesor);
   }
 
-  remove(id: number) {
-    const profesorIndex = this.profesores.findIndex((a) => a.id === id);
-    if (profesorIndex === -1) throw new NotFoundException('Profesor not found');
-    this.profesores.splice(profesorIndex, 1);
+  async remove(id: number): Promise<void> {
+    const profesor = await this.findOne(id);
+    await this.profesorRepository.remove(profesor);
   }
 }
