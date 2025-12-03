@@ -3,7 +3,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   Matches,
   Max,
@@ -11,12 +10,6 @@ import {
 } from 'class-validator';
 
 export class UpdateAlumnoDto {
-  @IsNumber()
-  @IsPositive()
-  @IsOptional()
-  @ApiProperty({ type: Number, description: 'ID del alumno', required: false })
-  id?: number;
-
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ type: String, description: 'Nombres del alumno' })
@@ -40,4 +33,13 @@ export class UpdateAlumnoDto {
   @Max(100)
   @ApiProperty({ type: Number, description: 'Promedio del alumno' })
   promedio: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: 'Password del alumno',
+    required: false,
+  })
+  password?: string;
 }

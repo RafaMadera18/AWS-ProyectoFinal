@@ -2,19 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsNumber,
-  IsPositive,
   IsString,
   Matches,
   Max,
   Min,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateAlumnoDto {
-  @IsNumber()
-  @IsPositive()
-  @ApiProperty({ type: Number, description: 'ID del alumno' })
-  id: number;
-
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ type: String, description: 'Nombres del alumno' })
@@ -38,4 +33,13 @@ export class CreateAlumnoDto {
   @Max(100)
   @ApiProperty({ type: Number, description: 'Promedio del alumno' })
   promedio: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    type: String,
+    description: 'Password del alumno',
+    required: false,
+  })
+  password?: string;
 }
